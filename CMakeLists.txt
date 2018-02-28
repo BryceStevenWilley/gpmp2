@@ -41,6 +41,8 @@ find_package(Boost COMPONENTS serialization REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIR})
 
+message("Ignoring boost restriction on optional lvalue to assignment for rvalues.")
+add_definitions(-DBOOST_OPTIONAL_ALLOW_BINDING_TO_RVALUES -DBOOST_OPTIONAL_CONFIG_ALLOW_BINDING_TO_RVALUES)
 
 # include current source folder, at the very beginning
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
