@@ -9,13 +9,19 @@
 
 #include <gpmp2/planner/TrajOptimizerSetting.h>
 #include <gpmp2/kinematics/ArmModel.h>
+#include <gpmp2/kinematics/Pose2MobileBaseModel.h>
 #include <gpmp2/kinematics/Pose2MobileArmModel.h>
+#include <gpmp2/kinematics/Pose2Mobile2ArmsModel.h>
+#include <gpmp2/kinematics/Pose2MobileVetLinArmModel.h>
+#include <gpmp2/kinematics/Pose2MobileVetLin2ArmsModel.h>
 #include <gpmp2/obstacle/PlanarSDF.h>
 #include <gpmp2/obstacle/SignedDistanceField.h>
 #include <gpmp2/geometry/Pose2Vector.h>
+#include <gpmp2/config.h>
 
 #include <gtsam/nonlinear/Values.h>
 #include <gtsam/nonlinear/NonlinearFactorGraph.h>
+#include <gtsam/nonlinear/NonlinearOptimizer.h>
 #include <gtsam/base/Matrix.h>
 #include <gtsam/base/Vector.h>
 
@@ -34,7 +40,7 @@ namespace gpmp2 {
  * @param setting trajectory optimization settings
  * @return optimized values, x(0) - x(setting.total_step), v(0) - v(setting.total_step)
  */
-gtsam::Values BatchTrajOptimize2DArm(
+GPMP2_EXPORT gtsam::Values BatchTrajOptimize2DArm(
     const ArmModel& arm, const PlanarSDF& sdf,
     const gtsam::Vector& start_conf, const gtsam::Vector& start_vel,
     const gtsam::Vector& end_conf, const gtsam::Vector& end_vel,
@@ -53,7 +59,7 @@ gtsam::Values BatchTrajOptimize2DArm(
  * @param setting trajectory optimization settings
  * @return optimized values, x(0) - x(setting.total_step), v(0) - v(setting.total_step)
  */
-gtsam::Values BatchTrajOptimize3DArm(
+GPMP2_EXPORT gtsam::Values BatchTrajOptimize3DArm(
     const ArmModel& arm, const SignedDistanceField& sdf,
     const gtsam::Vector& start_conf, const gtsam::Vector& start_vel,
     const gtsam::Vector& end_conf, const gtsam::Vector& end_vel,
@@ -72,7 +78,7 @@ gtsam::Values BatchTrajOptimize3DArm(
  * @param setting trajectory optimization settings
  * @return optimized values, x(0) - x(setting.total_step), v(0) - v(setting.total_step)
  */
-gtsam::Values BatchTrajOptimizePose2MobileArm2D(
+GPMP2_EXPORT gtsam::Values BatchTrajOptimizePose2MobileArm2D(
     const Pose2MobileArmModel& marm, const PlanarSDF& sdf,
     const Pose2Vector& start_conf, const gtsam::Vector& start_vel,
     const Pose2Vector& end_conf, const gtsam::Vector& end_vel,
@@ -91,12 +97,32 @@ gtsam::Values BatchTrajOptimizePose2MobileArm2D(
  * @param setting trajectory optimization settings
  * @return optimized values, x(0) - x(setting.total_step), v(0) - v(setting.total_step)
  */
-gtsam::Values BatchTrajOptimizePose2MobileArm(
+GPMP2_EXPORT gtsam::Values BatchTrajOptimizePose2MobileArm(
     const Pose2MobileArmModel& marm, const SignedDistanceField& sdf,
     const Pose2Vector& start_conf, const gtsam::Vector& start_vel,
     const Pose2Vector& end_conf, const gtsam::Vector& end_vel,
     const gtsam::Values& init_values, const TrajOptimizerSetting& setting);
 
+// Pose2Mobile2Arms
+GPMP2_EXPORT gtsam::Values BatchTrajOptimizePose2Mobile2Arms(
+    const Pose2Mobile2ArmsModel& marm, const SignedDistanceField& sdf,
+    const Pose2Vector& start_conf, const gtsam::Vector& start_vel,
+    const Pose2Vector& end_conf, const gtsam::Vector& end_vel,
+    const gtsam::Values& init_values, const TrajOptimizerSetting& setting);
+
+// Pose2MobileVetLinArm
+GPMP2_EXPORT gtsam::Values BatchTrajOptimizePose2MobileVetLinArm(
+    const Pose2MobileVetLinArmModel& marm, const SignedDistanceField& sdf,
+    const Pose2Vector& start_conf, const gtsam::Vector& start_vel,
+    const Pose2Vector& end_conf, const gtsam::Vector& end_vel,
+    const gtsam::Values& init_values, const TrajOptimizerSetting& setting);
+
+// Pose2MobileVetLin2Arms
+GPMP2_EXPORT gtsam::Values BatchTrajOptimizePose2MobileVetLin2Arms(
+    const Pose2MobileVetLin2ArmsModel& marm, const SignedDistanceField& sdf,
+    const Pose2Vector& start_conf, const gtsam::Vector& start_vel,
+    const Pose2Vector& end_conf, const gtsam::Vector& end_vel,
+    const gtsam::Values& init_values, const TrajOptimizerSetting& setting);
 
 /**
  * @brief collision cost for 2D arm trajectory
@@ -106,7 +132,7 @@ gtsam::Values BatchTrajOptimizePose2MobileArm(
  * @param setting trajectory optimization settings
  * @return collision cost
  */
-double CollisionCost2DArm(
+GPMP2_EXPORT double CollisionCost2DArm(
     const ArmModel& arm, const PlanarSDF& sdf,
     const gtsam::Values& result, const TrajOptimizerSetting& setting);
 
@@ -119,7 +145,7 @@ double CollisionCost2DArm(
  * @param setting trajectory optimization settings
  * @return collision cost
  */
-double CollisionCost3DArm(
+GPMP2_EXPORT double CollisionCost3DArm(
     const ArmModel& arm, const SignedDistanceField& sdf,
     const gtsam::Values& result, const TrajOptimizerSetting& setting);
 
@@ -132,10 +158,19 @@ double CollisionCost3DArm(
  * @param setting trajectory optimization settings
  * @return collision cost
  */
-double CollisionCostPose2MobileArm2D(
+GPMP2_EXPORT double CollisionCostPose2MobileArm2D(
     const Pose2MobileArmModel& marm, const PlanarSDF& sdf,
     const gtsam::Values& result, const TrajOptimizerSetting& setting);
 
+/// 2D mobile base SE(2)
+GPMP2_EXPORT double CollisionCostPose2MobileBase2D(
+    const Pose2MobileBaseModel& robot, const PlanarSDF& sdf,
+    const gtsam::Values& result, const TrajOptimizerSetting& setting);
+
+/// 3D mobile base SE(2)
+GPMP2_EXPORT double CollisionCostPose2MobileBase(
+    const Pose2MobileBaseModel& robot, const SignedDistanceField& sdf,
+    const gtsam::Values& result, const TrajOptimizerSetting& setting);
 
 /**
  * @brief collision cost for 3D mobile arm trajectory
@@ -145,10 +180,32 @@ double CollisionCostPose2MobileArm2D(
  * @param setting trajectory optimization settings
  * @return collision cost
  */
-double CollisionCostPose2MobileArm(
+GPMP2_EXPORT double CollisionCostPose2MobileArm(
     const Pose2MobileArmModel& marm, const SignedDistanceField& sdf,
     const gtsam::Values& result, const TrajOptimizerSetting& setting);
 
+// Pose2Mobile2Arms
+GPMP2_EXPORT double CollisionCostPose2Mobile2Arms(
+    const Pose2Mobile2ArmsModel& marm, const SignedDistanceField& sdf,
+    const gtsam::Values& result, const TrajOptimizerSetting& setting);
+
+// Pose2MobileVetLinArm
+GPMP2_EXPORT double CollisionCostPose2MobileVetLinArm(
+    const Pose2MobileVetLinArmModel& marm, const SignedDistanceField& sdf,
+    const gtsam::Values& result, const TrajOptimizerSetting& setting);
+
+// Pose2MobileVetLin2Arms
+GPMP2_EXPORT double CollisionCostPose2MobileVetLin2Arms(
+    const Pose2MobileVetLin2ArmsModel& marm, const SignedDistanceField& sdf,
+    const gtsam::Values& result, const TrajOptimizerSetting& setting);
+
+
+/// run a single optimizer iteration
+/// compare to GTSAM default optimization method, if error increase during iteration,
+/// will return the smallest error value, not the increased one
+GPMP2_EXPORT gtsam::Values optimize(const gtsam::NonlinearFactorGraph& graph,
+    const gtsam::Values& init_values, const TrajOptimizerSetting& setting,
+    bool iter_no_increase = true);
 
 namespace internal {
 
@@ -162,7 +219,8 @@ namespace internal {
  * @tparam OBS_FACTOR obstacle cost factor type
  * @tparam OBS_FACTOR_GP GP interpolated obstacle cost factor type
  */
-template <class ROBOT, class GP, class SDF, class OBS_FACTOR, class OBS_FACTOR_GP>
+template <class ROBOT, class GP, class SDF, class OBS_FACTOR, class OBS_FACTOR_GP, 
+    class LIMIT_FACTOR_POS, class LIMIT_FACTOR_VEL>
 gtsam::Values BatchTrajOptimize(
     const ROBOT& arm, const SDF& sdf,
     const typename ROBOT::Pose& start_conf, const typename ROBOT::Velocity& start_vel,
@@ -180,6 +238,14 @@ template <class ROBOT, class SDF, class OBS_FACTOR>
 double CollisionCost(
     const ROBOT& robot, const SDF& sdf, const gtsam::Values& result, 
     const TrajOptimizerSetting& setting);
+
+/**
+ * @brief collision cost checking for a single state
+ * @tparam ROBOT robot body model type
+ * @tparam SDF signed distance field type
+ * @tparam OBS_FACTOR obstacle cost factor type
+ */
+
 
 }   // namespace internal
 }   // namespace gpmp2

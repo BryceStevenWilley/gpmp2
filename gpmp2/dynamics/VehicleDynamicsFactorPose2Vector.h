@@ -1,8 +1,8 @@
 /**
- *  @file  VehicleDynamicsFactorPose2Vector.h
- *  @brief simple 2D vehicle dynamics factor for mobile arm base
- *  @author Jing Dong
- *  @date  Oct 14, 2016
+ *  @file   VehicleDynamicsFactorPose2Vector.h
+ *  @brief  simple 2D vehicle dynamics factor for mobile arm base in Lie group SE(2)
+ *  @author Jing Dong, Mustafa Mukadam
+ *  @date   Oct 14, 2016
  **/
 
 
@@ -42,9 +42,7 @@ public:
 
   /**
    * Constructor
-   * @param cost_model cost function covariance, should to identity model
-   * @param field      signed distance field
-   * @param nn_index   nearest neighbour index of signed distance field
+   * @param cost_sigma cost function covariance, should to identity model
    */
   VehicleDynamicsFactorPose2Vector(gtsam::Key poseKey, gtsam::Key velKey, double cost_sigma) :
         Base(gtsam::noiseModel::Isotropic::Sigma(1, cost_sigma), poseKey, velKey) {}
@@ -53,7 +51,7 @@ public:
 
 
   /// error function
-  /// numerical jacobians / analytic jacobians from cost function
+  /// numerical/analytic Jacobians from cost function
   gtsam::Vector evaluateError(const Pose2Vector& conf, const gtsam::Vector& vel,
       boost::optional<gtsam::Matrix&> H1 = boost::none,
       boost::optional<gtsam::Matrix&> H2 = boost::none) const {
@@ -62,7 +60,7 @@ public:
 
     if (H1 || H2) {
       Matrix13 Hp, Hv;
-      const double err = simple2DVechileDyanmics(conf.pose(),
+      const double err = simple2DVehicleDynamicsPose2(conf.pose(),
           vel.head<3>(), Hp, Hv);
       if (H1) {
         *H1 = Matrix::Zero(1, conf.dim());
@@ -75,7 +73,7 @@ public:
       return (Vector(1) << err).finished();
 
     } else {
-      return (Vector(1) << simple2DVechileDyanmics(conf.pose(),
+      return (Vector(1) << simple2DVehicleDynamicsPose2(conf.pose(),
           vel.head<3>())).finished();
     }
   }

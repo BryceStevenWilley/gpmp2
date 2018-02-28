@@ -1,9 +1,6 @@
 GPMP2
 ===================================================
-This library is an implementation of GPMP2 (Gaussian Process Motion Planner 2) algorithm described in Motion Planning
-as Probabilistic Inference using Gaussian Processes and Factor Graphs (RSS 2016). The core library is developed in C++
-language, and an optional Matlab toolbox is provided. Examples are provided in Matlab scripts.
-An OpenRAVE plugin, [orgpmp2](https://github.com/gtrll/gpmp2_orplugin), is also avaible with examples.
+This library is an implementation of GPMP2 (Gaussian Process Motion Planner 2) algorithm described in [Motion Planning as Probabilistic Inference using Gaussian Processes and Factor Graphs](http://www.cc.gatech.edu/~bboots3/files/GPMP2.pdf) (RSS 2016). The core library is developed in C++ language, and an optional Matlab toolbox is provided. Examples are provided in Matlab scripts. An OpenRAVE plugin, [orgpmp2](https://github.com/gtrll/gpmp2_orplugin), is available with examples. A ROS interface is also available within [PIPER](https://github.com/gtrll/piper).
 
 GPMP2 is being developed by [Jing Dong](mailto:thu.dongjing@gmail.com) and 
 [Mustafa Mukadam](mailto:mmukadam3@gatech.edu) as part of their work at Georgia Tech Robot Learning Lab. 
@@ -19,13 +16,13 @@ Here we use factor graph implementations and inference/optimization tools provid
 Compilation & Installation
 ------
 
-In the library folder excute:
+In the library folder execute:
 
 ```
 $ mkdir build
 $ cd build
 $ cmake ..
-$ make check  # optonal, run unit tests
+$ make check  # optional, run unit tests
 $ make install
 ```
 
@@ -44,10 +41,11 @@ After you install the Matlab toolbox, don't forget to add `/path/install/toolbox
 Tested Compatibility
 -----
 
-The gpmp2 library is designed to be cross-platform, however it's only tested on Ubuntu Linux for now.
+The gpmp2 library is designed to be cross-platform. It has been tested on Ubuntu Linux and Windows for now.
 
-- Compilers: GCC 4.8, 4.9, 5.3
-- Boost version: 1.50 - 1.60
+- Ubuntu: GCC 4.8 - 4.9, 5.3 - 5.4
+- Windows: Visual C++ 2015 (Matlab toolbox not tested)
+- Boost: 1.50 - 1.61
 
 
 Questions & Bug reporting
@@ -64,10 +62,19 @@ If you use GPMP2 in an academic context, please cite following publications:
 
 ```
 @inproceedings{Dong-RSS-16,
-   Author = "Jing Dong and Mustafa Mukadam and Frank Dellaert and Byron Boots",
-   booktitle = {Proceedings of Robotics: Science and Systems (RSS-2016)},
-   Title = "Motion Planning as Probabilistic Inference using Gaussian Processes and Factor Graphs",
-   year = {2016}
+  Author = "Jing Dong and Mustafa Mukadam and Frank Dellaert and Byron Boots",
+  booktitle = {Proceedings of Robotics: Science and Systems (RSS-2016)},
+  Title = "Motion Planning as Probabilistic Inference using Gaussian Processes and Factor Graphs",
+  year = {2016}
+}
+
+@article{Dong17arxiv,
+  author    = {Jing Dong and Byron Boots and Frank Dellaert},
+  title     = {Sparse Gaussian Processes for Continuous-Time Trajectory Estimation on Matrix Lie Groups},
+  journal   = {Arxiv},
+  volume    = {abs/1705.06020},
+  year      = {2017},
+  url       = {http://arxiv.org/abs/1705.06020}
 }
 ```
 

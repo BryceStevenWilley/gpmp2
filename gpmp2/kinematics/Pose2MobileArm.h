@@ -10,6 +10,7 @@
 #include <gpmp2/kinematics/Arm.h>
 #include <gpmp2/kinematics/ForwardKinematics.h>
 #include <gpmp2/geometry/Pose2Vector.h>
+#include <gpmp2/config.h>
 
 #include <gtsam/geometry/Pose3.h>
 #include <gtsam/base/Matrix.h>
@@ -23,7 +24,7 @@ namespace gpmp2 {
  * Abstract plannar mobile manipulator, without any physical model representation
  * Inherited from ForwardKinematics
  */
-class Pose2MobileArm : public ForwardKinematics<Pose2Vector, gtsam::Vector> {
+class GPMP2_EXPORT Pose2MobileArm : public ForwardKinematics<Pose2Vector, gtsam::Vector> {
 
 private:
   // typedefs
@@ -62,23 +63,9 @@ public:
       boost::optional<std::vector<gtsam::Matrix>&> J_vx_v = boost::none) const;
 
 
-  /**
-   * base pose utils
-   */
-
-  /// convert 2D pose to 3D pose on x-y plane, with jacobian
-  gtsam::Pose3 computeBasePose3(const gtsam::Pose2& base_pose2,
-      gtsam::OptionalJacobian<6,3> J = boost::none) const;
-
-  /// compute arm base pose3 given vehicle base pose2, with jacobian
-  gtsam::Pose3 computeArmBasePose(const gtsam::Pose2& base_pose2,
-      gtsam::OptionalJacobian<6,3> J = boost::none) const;
-
-
   /// accesses
   const gtsam::Pose3& base_T_arm() const { return base_T_arm_; }
   const Arm& arm() const { return arm_; }
-
 };
 
 }
