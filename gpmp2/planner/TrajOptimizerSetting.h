@@ -9,7 +9,7 @@
 
 #include <gpmp2/config.h>
 #include <gtsam/linear/NoiseModel.h>
-
+#include <string>
 
 namespace gpmp2 {
 
@@ -50,6 +50,9 @@ struct GPMP2_EXPORT TrajOptimizerSetting {
   bool final_iter_no_increase;  // value is guaranteed not increase at last iteration
   double rel_thresh;            // relative error decrease threshold for stopping optimization
   size_t max_iter;              // max iteration for stopping optimization
+
+  /// Logging Settings.
+  std::string conversion_filename; // Filename to save conversion-rate data.
 
   /// default constructor, must manually set all parameters that depend on dof
   TrajOptimizerSetting();
@@ -97,6 +100,9 @@ struct GPMP2_EXPORT TrajOptimizerSetting {
   void setVerbosityError() { opt_verbosity = Error; }
   /// set value is guaranteed not increase
   void setOptimizationNoIncrase(bool flag) { final_iter_no_increase = flag; }
+
+  // Logging settings
+  void setConversionFilename(std::string filename) { conversion_filename = filename; }
 };
 
 }

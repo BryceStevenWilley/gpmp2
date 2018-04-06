@@ -215,6 +215,16 @@ gtsam::Values optimize(const gtsam::NonlinearFactorGraph& graph, const gtsam::Va
   std::shared_ptr<gtsam::NonlinearOptimizer> opt;
   std::shared_ptr<gtsam::NonlinearOptimizerParams> params;
 
+  std::ofstream conversion_stream;
+  std::chrono::system_clock::time_point start = std::chrono::high_resolution_clock::now();
+  bool write_conversion_data = false;
+  // Make the conversion file, if one is requested.
+  if (setting.conversion_filename != "") {
+    conversion_stream.open(setting.conversion_filename);
+    conversion_stream << std::fixed << "[";
+    write_conversion_data = true;
+  }
+
   // init the params/opt and type specific settings
   if (setting.opt_type == TrajOptimizerSetting::Dogleg) {
     params = std::shared_ptr<gtsam::NonlinearOptimizerParams>(new DoglegParams());
@@ -248,6 +258,10 @@ gtsam::Values optimize(const gtsam::NonlinearFactorGraph& graph, const gtsam::Va
   }
 
   double currentError = opt->error();
+  double time = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - start).count();
+  conversion_stream << "{\"iter\":" << opt->iterations() << 
+                       ",\"seconds_elapsed\":" << time <<
+                       ",\"cost\":" << currentError << "}" << std::endl;
   
   // check if we're already close enough
   if (currentError <= params->errorTol) {
@@ -273,6 +287,15 @@ gtsam::Values optimize(const gtsam::NonlinearFactorGraph& graph, const gtsam::Va
   do {
     // iteration
     currentError = opt->error();
+    // Do an output!
+    if (write_conversion_data)
+    {
+      time = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - start).count();
+      conversion_stream << ",{\"iter\":" << opt->iterations() << 
+                           ",\"seconds_elapsed\":" << time <<
+                           ",\"cost\":" << currentError << "}" << std::endl;
+    }
+    
     // copy last values in case error increase
     if (iter_no_increase)
       last_values = opt->values();
@@ -290,6 +313,12 @@ gtsam::Values optimize(const gtsam::NonlinearFactorGraph& graph, const gtsam::Va
     cout << "iterations: " << opt->iterations() << " > " << params->maxIterations << endl;
     if (opt->iterations() >= params->maxIterations)
       cout << "Terminating because reached maximum iterations" << endl;
+  }
+
+  if (write_conversion_data)
+  {
+    conversion_stream << "]";
+    conversion_stream.close();
   }
 
   // check whether values increase

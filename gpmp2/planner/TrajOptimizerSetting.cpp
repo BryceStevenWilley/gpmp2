@@ -25,7 +25,8 @@ TrajOptimizerSetting::TrajOptimizerSetting() :
     opt_verbosity(None),
     final_iter_no_increase(true),
     rel_thresh(1e-2),
-    max_iter(50) {
+    max_iter(50),
+    conversion_filename("") {
 }
 
 /* ************************************************************************** */
@@ -52,7 +53,8 @@ TrajOptimizerSetting::TrajOptimizerSetting(size_t system_dof) :
     opt_verbosity(None),
     final_iter_no_increase(true),
     rel_thresh(1e-2),
-    max_iter(50) {
+    max_iter(50),
+    conversion_filename("") {
 }
 
 /* ************************************************************************** */

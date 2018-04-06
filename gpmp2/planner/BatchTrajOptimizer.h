@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <chrono>
+
 #include <gpmp2/planner/TrajOptimizerSetting.h>
 #include <gpmp2/kinematics/ArmModel.h>
 #include <gpmp2/kinematics/Pose2MobileBaseModel.h>
